@@ -60,3 +60,5 @@ La aplicación escucha en el puerto **5000**.
 ## Base de datos
 
 La tabla `libros` se crea sola la primera vez que la app se conecta a la base de datos; no hay que ejecutar ningún script SQL.
+
+Reto de despliegue: ver [docs/RETO_DESPLIEGUE.md](docs/RETO_DESPLIEGUE.md)
