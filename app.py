@@ -20,14 +20,22 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "clave-solo-para-desarrollo")
 
 
+# Indica si ya hemos comprobado/creado la tabla desde que arrancó la app
+tabla_creada = False
+
+
 def conectar():
     """Abre una conexión nueva con la base de datos (las filas llegan como diccionarios)."""
-    return psycopg.connect(DATABASE_URL, row_factory=dict_row)
-
-
-def crear_tabla():
-    """Crea la tabla de libros si todavía no existe."""
-    with conectar() as conn:
+    global tabla_creada
+    if not DATABASE_URL:
+        raise RuntimeError(
+            "Falta la variable de entorno DATABASE_URL. "
+            "Ejemplo: postgresql://usuario:contraseña@localhost:5432/biblioteca"
+        )
+    conn = psycopg.connect(DATABASE_URL, row_factory=dict_row)
+    # La tabla se crea la primera vez que nos conectamos (y no en el bloque main),
+    # así funciona con `python app.py` y con cualquier servidor que importe el módulo.
+    if not tabla_creada:
         conn.execute(
             """CREATE TABLE IF NOT EXISTS libros (
                    id SERIAL PRIMARY KEY,
@@ -38,6 +46,9 @@ def crear_tabla():
                    creado TIMESTAMP DEFAULT now()
                )"""
         )
+        conn.commit()
+        tabla_creada = True
+    return conn
 
 
 def validar(titulo, autor, anio_texto):
@@ -132,6 +143,15 @@ def datos_comunes():
 @app.errorhandler(psycopg.Error)
 def error_base_datos(error):
     """Si falla la base de datos, muestra una página amable en vez de la traza."""
+    # Así el error real aparece en los logs aunque el usuario vea una página amable
+    app.logger.error("Error de base de datos: %s", error)
+    return render_template("error.html"), 503
+
+
+@app.errorhandler(RuntimeError)
+def error_configuracion(error):
+    """Si falta la configuración (por ejemplo DATABASE_URL), lo registra y muestra la misma página."""
+    app.logger.error("Error de configuración: %s", error)
     return render_template("error.html"), 503
 
 
@@ -142,5 +162,4 @@ if __name__ == "__main__":
             "Ejemplo: postgresql://usuario:contraseña@localhost:5432/biblioteca\n"
             "Defínela en el sistema o en un fichero .env (mira .env.example)."
         )
-    crear_tabla()
     app.run(debug=True, port=5000)

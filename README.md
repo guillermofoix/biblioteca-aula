@@ -17,10 +17,10 @@ Están fijadas en `requirements.txt`:
 
 ## Variables de entorno
 
-| Nombre | Para qué sirve | Ejemplo |
-|---|---|---|
-| `DATABASE_URL` | Dirección de conexión a PostgreSQL. **Obligatoria**: sin ella la app no arranca. | `postgresql://usuario:contraseña@localhost:5432/biblioteca` |
-| `SECRET_KEY` | Clave para firmar los mensajes que se muestran al usuario. Si no se define, se usa una clave de desarrollo; en producción hay que poner una propia. | `una-clave-larga-y-secreta` |
+| Nombre         | Para qué sirve                                                                                                                                      | Ejemplo                                                     |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| `DATABASE_URL` | Dirección de conexión a PostgreSQL. **Obligatoria**: sin ella la app no arranca.                                                                    | `postgresql://usuario:contraseña@localhost:5432/biblioteca` |
+| `SECRET_KEY`   | Clave para firmar los mensajes que se muestran al usuario. Si no se define, se usa una clave de desarrollo; en producción hay que poner una propia. | `una-clave-larga-y-secreta`                                 |
 
 En local se pueden definir en un fichero `.env` en la raíz del proyecto (copia `.env.example` y cambia los valores).
 
@@ -30,12 +30,14 @@ En local se pueden definir en un fichero `.env` en la raíz del proyecto (copia 
 2. Crea y activa un entorno virtual:
 
    **Linux / macOS**
+
    ```bash
    python3.12 -m venv .venv
    source .venv/bin/activate
    ```
 
    **Windows (PowerShell)**
+
    ```powershell
    py -3.12 -m venv .venv
    .venv\Scripts\Activate.ps1
@@ -57,4 +59,4 @@ La aplicación escucha en el puerto **5000**.
 
 ## Base de datos
 
-La tabla `libros` se crea sola al arrancar si todavía no existe; no hay que ejecutar ningún script SQL.
+La tabla `libros` se crea sola la primera vez que la app se conecta a la base de datos; no hay que ejecutar ningún script SQL.
