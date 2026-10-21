@@ -8,6 +8,10 @@ Esta guía no tiene soluciones: tiene **preguntas**. Si sabes responderlas, sabr
 
 ## Antes de empezar
 
+**Dónde trabajas:** en los PC del aula no hay Docker, así que todo lo de Docker se ejecuta en **tu EC2 del laboratorio**, desde la fase 2.
+- El código y los ficheros Docker los editas en el IDE de tu PC y los llevas a la EC2 con `git push` (en el PC) y `git pull` (en la EC2), como en el Muro.
+- Para ver la app en el navegador, usa un túnel SSH hacia el puerto que publiques en la EC2.
+
 - Trabaja en tu repositorio (creado desde la plantilla) y haz un commit al terminar cada fase.
 - El fichero `.env` **nunca** se sube a GitHub. Compruébalo con `git status` antes de cada commit.
 - No hace falta cambiar la lógica de la aplicación. Si crees que necesitas tocar `app.py`, piénsalo dos veces: casi siempre hay otra forma.
